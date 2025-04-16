@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { ApolloProvider } from '@apollo/client';
+import client from '@/lib/apolloClient';
 import { geistMono, geistSans } from "@/assets/font";
 import "@/assets/styles/globals.css";
 
@@ -13,15 +15,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const fontClass = `${geistSans.variable} ${geistMono.variable} font-sans antialiased`;
+
   return (
     <html lang="en">
-      <body
-        className={`
-          ${geistSans.variable}
-          ${geistMono.variable}
-          antialiased`}
-      >
-        {children}
+      <body className={fontClass} suppressHydrationWarning>
+        <ApolloProvider client={client}>{children}</ApolloProvider>
       </body>
     </html>
   );
