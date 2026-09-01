@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Edukmoko
 
-## Getting Started
+Next.js rebuild of NORSU ELCMS: a campus LMS with five roles, a social feed, direct messages, class join codes, learning-module approval, and a working assessment/gradebook.
 
-First, run the development server:
+## Stack
+
+- Next.js App Router
+- PostgreSQL + Prisma
+- GraphQL Yoga at `/api/graphql`
+- Auth.js credentials (bcrypt, pending-approval gate)
+- shadcn/ui
+
+The previous MongoDB/parallel-route skeleton lives on the `old-main` branch.
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+cp .env.example .env
+# start Postgres (docker compose up -d if you have Docker)
+pnpm db:push
+pnpm db:seed
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Seeded logins
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Usernames are lowercase. Passwords match the original NORSU demo accounts.
 
-## Learn More
+| Role | Username | Password |
+| --- | --- | --- |
+| Admin | `registeradmin` | `RegisterAdmin` |
+| Dean | `registercollegedean` | `RegisterCollegeDean` |
+| Department head | `registerdepthead` | `RegisterDeptHead` |
+| Instructor | `registerinstructor` | `RegisterInstructor` |
+| Student | `studentregister` | `StudentRegister` |
 
-To learn more about Next.js, take a look at the following resources:
+Demo class join code: `CLASS123`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Roles
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `/student`, `/instructor`, `/depthead`, `/dean`, `/admin`
+- New student/instructor registrations stay `PENDING` until an admin approves them
+- Modules move `DRAFT → DEPT_HEAD_REVIEW → DEAN_REVIEW → PUBLISHED`

@@ -1,11 +1,18 @@
-"use client";
+import { redirect } from "next/navigation"
 
-import React from 'react'
+import { auth } from "@/auth"
+import { homeForRole } from "@/lib/roles"
 
-const Home = () => {
-  return (
-    <div>Home</div>
-  )
+export default async function HomePage() {
+  const session = await auth()
+  if (!session?.user) {
+    redirect("/login")
+  }
+  if (session.user.accountStatus === "PENDING") {
+    redirect("/pending")
+  }
+  if (session.user.accountStatus !== "APPROVED") {
+    redirect("/login")
+  }
+  redirect(homeForRole(session.user.role))
 }
-
-export default Home
